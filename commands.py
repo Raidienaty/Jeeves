@@ -10,5 +10,5 @@ class Commands:
         if re.search(r'\b(Hey|hello|yo|hi) Jeeves', request, re.I):
             self.called = True
 
-    def evaluateRequest():
+    def evaluateRequest(self, request):
         pass

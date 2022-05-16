@@ -7,11 +7,13 @@ import sys
 
 import MicrophoneStream
 
+import commands
+
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 
-def listen_print_loop(responses):
+def listen_print_loop(responses, commandSystem):
     """Iterates through server responses and prints them.
 
     The responses passed is a generator that will block until a response
@@ -55,13 +57,16 @@ def listen_print_loop(responses):
             num_chars_printed = len(transcript)
 
         else:
-            print(transcript + overwrite_chars)
+            print("User: " + transcript + overwrite_chars)
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
             if re.search(r"\b(exit|quit)\b", transcript, re.I):
                 print("Exiting..")
                 break
+            
+            if commandSystem.checkCall(transcript):
+                commandSystem.evaluateRequest(transcript)
 
             num_chars_printed = 0
 
@@ -82,6 +87,8 @@ def main():
         config=config, interim_results=True
     )
 
+    commandSystem = commands.Commands()
+
     with MicrophoneStream.MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
         requests = (
@@ -92,7 +99,7 @@ def main():
         responses = client.streaming_recognize(streaming_config, requests)
 
         # Now, put the transcription responses to use.
-        listen_print_loop(responses)
+        listen_print_loop(responses, commandSystem)
 
 
 if __name__ == "__main__":
