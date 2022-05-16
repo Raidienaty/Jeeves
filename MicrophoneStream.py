@@ -1,9 +1,7 @@
-import pyaudio
-from six.moves import queue
+from __future__ import division
 
-# Audio recording parameters
-RATE = 16000
-CHUNK = int(RATE / 10)  # 100ms
+import pyaudio # sudo apt install libasound-dev portaudio19-dev libportaudiocpp0
+from six.moves import queue
 
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
