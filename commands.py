@@ -8,14 +8,33 @@ class Commands:
         self.hru = False
 
     def checkCall(self, request):
-        if re.search(r'\b(Hey|hello|yo|hi) Jeeves', request, re.I):
+        if self.lookForName(request):
             self.called = True
-            return True
-        elif self.called:
             return True
         else:
             self.called = False
             return False
+        
+    def lookForName(self, request):
+        greetings = r'\b(Hey|hello|yo|hi|good morning|good evening|good afternoon)'
+
+        # No error check with proper greetings
+        if re.search(greetings + r' \bJeeves', request, re.I):
+            return True
+        # Mentioned name but no greeting detected
+        elif re.search(r'\bJeeves', request, re.I):
+            pass
+        # Potential false positive with stt engine for name
+        elif re.search(r'\b(dreeves|trees)', request, re.I):
+            if re.search(r'\b' + greetings, request, re.I):
+                return True
+
+        # Potential false positive with stt engine for 'hey jeeves'
+        elif re.search(r'\bachieve', request, re.I):
+            if request.count(' ') == 0:
+                return True
+
+        return False
 
     def evaluate_expression(self, equation):
         evaleq = compile(equation, "<string>", "eval")
@@ -28,5 +47,5 @@ class Commands:
         elif re.search(r'\bHow are you', request, re.I):
             print('I\'m doing well, how are you?')
             self.hru = True
-        elif self.hru:
+        else:
             print('What can I do for you?')
