@@ -89,6 +89,8 @@ def main():
 
     commandSystem = commands.Commands()
 
+    print(commandSystem.evalComplexMath())
+
     with MicrophoneStream.MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
         requests = (

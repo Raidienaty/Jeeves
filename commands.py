@@ -1,6 +1,8 @@
 import re
 from math import *
 
+import wolframalpha
+
 class Commands:
 
     def __init__(self) -> None:
@@ -35,6 +37,11 @@ class Commands:
                 return True
 
         return False
+
+    def evalComplexMath(self):
+        client = wolframalpha.Client('AYHKGA-L5UUEX4WT3')
+
+        return client.query('Derivative of 20x')
 
     def evaluate_expression(self, equation):
         evaleq = compile(equation, "<string>", "eval")
