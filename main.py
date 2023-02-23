@@ -1,6 +1,7 @@
 from __future__ import division
 
 from google.cloud import speech
+from google.cloud import language_v1
 
 import re
 import sys
@@ -66,10 +67,30 @@ def listen_print_loop(responses, commandSystem):
                 break
             
             # if commandSystem.checkCall(transcript):
-            commandSystem.evaluateRequest(transcript)
+            # commandSystem.evaluateRequest(transcript)
+            sample_classify_text(transcript)
 
             num_chars_printed = 0
 
+def sample_classify_text(message):
+    # Create a client
+    client = language_v1.LanguageServiceClient()
+
+    # Initialize request argument(s)
+    document = language_v1.Document()
+    document.type_ = language_v1.Document.Type.PLAIN_TEXT
+    document.content = str(message)
+    document.language = "en-US"
+
+    request = language_v1.AnalyzeEntitiesRequest(
+        document=document,
+    )
+
+    # Make the request
+    response = client.analyze_entities(request=request)
+
+    # Handle the response
+    print(response)
 
 def main():
     # See http://g.co/cloud/speech/docs/languages
