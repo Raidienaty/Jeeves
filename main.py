@@ -68,11 +68,11 @@ def listen_print_loop(responses, commandSystem):
             
             # if commandSystem.checkCall(transcript):
             # commandSystem.evaluateRequest(transcript)
-            sample_classify_text(transcript)
+            process_text(transcript)
 
             num_chars_printed = 0
 
-def sample_classify_text(message):
+def process_text(message):
     # Create a client
     client = language_v1.LanguageServiceClient()
 
